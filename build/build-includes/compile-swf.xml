@@ -47,14 +47,15 @@
         <if>
             <equals arg1="debug" arg2="${compile.type}" casesensitive="false"/>
             <then>
-                <property name="debug.flag" value="-debug=true"/>
+                <property name="debug.flag" value="true"/>
+                <property name="optimize.flag" value="false"/>
                 <property name="mode.name" value="Debug"/>
             </then>
             <elseif>
                 <equals arg1="optimize" arg2="${compile.type}" casesensitive="false"/>
                 <then>
-                    <property name="debug.flag" value="-debug=false"/>
-                    <property name="optimize.flag" value="-optimize=true"/>
+                    <property name="debug.flag" value="false"/>
+                    <property name="optimize.flag" value="true"/>
                     <property name="mode.name" value="Optimized"/>
                 </then>
             </elseif>
@@ -66,6 +67,9 @@
 
             <arg value="-output=${bin.loc}/swfs/${project.name.versioned}.swf"/>
             <arg value="-static-link-runtime-shared-libraries=true"/>
+            <!--Compile mode debug vs. optimize-->
+            <arg value="-debug=${debug.flag}"/>
+            <arg value="-optimize=${optimize.flag}"/>
             <!-- Include classes from SWCs in this folder, but only the ones we use. -->
             <arg value="-library-path+=${lib.loc}"/>
             <arg value="-library-path+=${air.swcs}"/>
@@ -75,9 +79,6 @@
             <arg value="-use-network=false"/>
             <arg value="-default-frame-rate=31"/>
             <arg value="-define=CONFIG::mobile,${mobile}"/>
-            <!--Compile mode debug vs. optimize-->
-            <arg value="${debug.flag}"/>
-            <arg value="${optimize.flag}"/>
         </java>
 
         <echo>[compile] ${mode.name} SWF ${project.name.versioned}.swf created successfully</echo>
