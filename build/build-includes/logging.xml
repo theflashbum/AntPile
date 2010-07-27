@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<project name="logging" basedir=".">
+    <target name="start">
+        <if>
+            <istrue value="${logging}"/>
+            <then>
+                <mkdir dir="${logs.loc}" />
+                <tstamp>
+                    <format property="timestamp" pattern="yyyy-MM-dd_HHmmss"/>
+                </tstamp>
+                <property name="curlog" value="${logs.loc}/log-${timestamp}.txt"/>
+                <touch file="${curlog}"/>
+            </then>
+        </if>
+    </target>
+
+    <macrodef name="log">
+        <attribute name="message" default="" />
+        <text name="inner" optional="true" />
+        <sequential>
+            <if>
+                <istrue value="${logging}"/>
+                <then>
+                    <var name="timestamp" unset="true"/>
+                    <tstamp>
+                        <format property="timestamp" pattern="yyyy-MM-dd_HHmmss.SSS"/>
+                    </tstamp>
+                    <echo file="${curlog}" append="true" message="${timestamp} + ">@{message}@{inner}${line.separator}</echo>
+                </then>
+            </if>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="time">
+        <attribute name="name" default="stuff"/>
+        <sequential>
+            <log>Now timing @{name}</log>
+            <stopwatch name="@{name}" action="start"/>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="done">
+        <attribute name="name" default="stuff"/>
+        <sequential>
+            <stopwatch name="@{name}" action="total"/>
+            <log>Stopped timing @{name}</log>
+        </sequential>
+    </macrodef>
+</project>
+

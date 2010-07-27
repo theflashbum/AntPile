@@ -8,6 +8,8 @@
 /doc/*
 /report/*
 /dist/*
+/apks/*
+/tmp/*
  
 /.actionScriptProperties
 /.flexProperties
