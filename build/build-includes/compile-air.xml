@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<project name="compile-swf" basedir="." default="local-run">
+<project name="compile-air" basedir="." default="local-run">
+
     <target name="clean-bin">
         <!-- Remove all directories created during the build process -->
         <if>
@@ -37,16 +38,16 @@
             <fileset dir="${basedir}/build/bin-resources"/>
         </sync>
 
-        <copy file="${basedir}/build/html-template/index.template.html" tofile="${bin.loc}/index.html"/>
+        <copy file="${basedir}/build/air-resources/template-air-app.xml"
+              tofile="${bin.loc}/${project.name}-air-app.xml"/>
 
-        <replace file="${bin.loc}/index.html" propertyFile="${basedir}/build/html-template/html.properties">
-            <replacefilter token="@width@" property="width"/>
-            <replacefilter token="@height@" property="height"/>
-            <replacefilter token="@example@" value="${project.name.versioned}"/>
-            <replacefilter token="@version_major@" property="version_major"/>
-            <replacefilter token="@version_minor@" property="version_minor"/>
-            <replacefilter token="@version_minor@" property="version_minor"/>
-            <replacefilter token="@version_revision@" property="version_revision"/>
+          <replace file="${bin.loc}/${project.name}-air-app.xml" propertyFile="${basedir}/build/air-resources/air.properties">
+            <!--<replacefilter token="@width@" property="width"/>-->
+            <!--<replacefilter token="@height@" property="height"/>-->
+            <replacefilter token="@project@" value="${project.name.versioned}"/>
+            <replacefilter token="@package@" value="${app.package}"/>
+            <replacefilter token="@version@" value="1"/>
+            <replacefilter token="@projectversion@" value="${project.name.versioned}"/>
         </replace>
         <if>
             <istrue value="${csstidy}" />
@@ -80,6 +81,7 @@
         </if>
 
         <java jar="${FLEX_HOME}/lib/mxmlc.jar" dir="${FLEX_HOME}/frameworks" fork="true" failonerror="true">
+            <arg value="+configname=air"/>
             <arg value="${main.src.loc}/${project.name}.as"/>
             <arg value="-source-path=${main.src.loc}"/>
 
@@ -95,25 +97,25 @@
             <arg value="-verbose-stacktraces=true"/>
             <arg value="-headless-server=true"/>
             <arg value="-use-network=false"/>
-            <arg value="-default-frame-rate=31"/>
+            <!--<arg value="-default-frame-rate=31"/>-->
             <arg value="-define=CONFIG::mobile,${mobile}"/>
         </java>
 
         <echo>[compile] ${mode.name} SWF ${project.name.versioned}.swf created successfully</echo>
     </target>
 
-    <target name="local-run">
+    <target name="local-run" depends="compile">
         <echo message="${os.name}"/>
         <if>
             <equals arg1="${os.name}" arg2="Mac OS X"/>
             <then>
-                <exec executable="open">
-                    <arg line="-a ${browser} ${bin.loc}/index.html"/>
+                <exec executable="${FLEX_HOME}/bin/adl" spawn="false">
+                    <arg line="${bin.loc}/${project.name}-air-app.xml"/>
                 </exec>
             </then>
             <else>
-                <exec executable="${browser}">
-                    <arg line="file:///${bin.loc}/index.html"/>
+                <exec executable="${FLEX_HOME}/bin/adl.exe" spawn="false">
+                    <arg line="${bin.loc}/${project.name}-air-app.xml"/>
                 </exec>
             </else>
         </if>

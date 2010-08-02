@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<project name="package-air" basedir=".">
+    <target name="prep-folders">
+        <if>
+            <not>
+                <available type="dir" file="${apks.loc}"/>
+            </not>
+            <then>
+                <mkdir dir="${apks.loc}"/>
+            </then>
+        </if>
+        <mkdir dir="${tmp.loc}" /> 
+
+        <copy todir="${tmp.loc}">
+            <fileset dir="${bin.loc}">
+                <exclude name="swf"/>
+            </fileset>
+        </copy>
+        <mkdir dir="${tmp.loc}/swfs"/>
+        <copy file="${bin.loc}/swfs/${project.name.versioned}.swf" todir="${tmp.loc}/swfs"/>
+        <if>
+            <istrue value="${mobile}" />
+            <then>
+                <copy file="${basedir}/build/android-resources/template-air-app.xml"
+                    tofile="${tmp.loc}/${project.name}-air-app.xml"/>
+                <copy file="${basedir}/build/android-resources/air.properties"
+                    tofile="${tmp.loc}/air.properties"/>
+            </then>
+            <else>
+                <copy file="${basedir}/build/air-resources/template-air-app.xml"
+                    tofile="${tmp.loc}/${project.name}-air-app.xml"/>
+                <copy file="${basedir}/build/air-resources/air.properties"
+                    tofile="${tmp.loc}/air.properties"/>
+            </else>
+        </if>
+
+        <replace file="${tmp.loc}/${project.name}-air-app.xml" >
+            <replacefilter token="@project@" value="${project.name}"/>
+            <replacefilter token="@package@" value="${app.package}"/>
+            <replacefilter token="@version@" value="1"/>
+            <replacefilter token="@projectversion@" value="${project.name.versioned}"/>
+        </replace>
+
+    </target>
+
+    <!-- Android Deployment -->
+    <target name="package" depends="prep-folders">
+        <if>
+            <istrue value="${mobile}"/>
+            <then>
+                <java jar="${FLEX_HOME}/lib/adt.jar" fork="true" failonerror="true">
+                    <arg value="-package"/>
+                    <arg value="-target"/>
+                    <arg value="apk"/>
+                    <arg value="-storetype"/>
+                    <arg value="pkcs12"/>
+                    <arg value="-keystore"/>
+                    <arg value="${basedir}/build/air-resources/signcert2.p12"/>
+                    <arg value="-storepass"/>
+                    <arg value="${password}"/>
+                    <arg value="-keypass"/>
+                    <arg value="${password}"/>
+                    <arg value="${apks.loc}/${project.name.versioned}.apk"/>
+                    <arg value="${tmp.loc}/${project.name}-air-app.xml"/>
+                    <arg value="-C"/>
+                    <arg value="${tmp.loc}"/>
+                    <arg value="."/>
+                </java>
+            </then>
+            <else>
+                <java jar="${FLEX_HOME}/lib/adt.jar" fork="true" failonerror="true">
+                    <arg value="-package"/>
+                    <arg value="-storetype"/>
+                    <arg value="pkcs12"/>
+                    <arg value="-keystore"/>
+                    <arg value="${basedir}/build/air-resources/signcert2.p12"/>
+                    <arg value="-storepass"/>
+                    <arg value="${password}"/>
+                    <arg value="-keypass"/>
+                    <arg value="${password}"/>
+                    <arg value="-target"/>
+                    <arg value="air"/>
+                    <arg value="${apks.loc}/${project.name.versioned}.air"/>
+                    <arg value="${tmp.loc}/${project.name}-air-app.xml"/>
+                    <arg value="-C"/>
+                    <arg value="${tmp.loc}"/>
+                    <arg value="."/>
+                </java>
+            </else>
+        </if>
+
+
+        <delete dir="${tmp.loc}" />
+    </target>
+
+</project>
