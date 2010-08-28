@@ -75,3 +75,18 @@ use "open" which is a mac thing. Instead, the executable for us is ${browser}
 and the arg line is file://${report.url} because firefox needs a protocol (in
 this case file://) to open stuff up. 
 
+
+Configuring Browser For Auto Launch
+
+The following is a chart of values to use on each OS to auto launch in a browser
+
+Mac	
+Browser		Value
+Safari		Safari
+Firefox		FireFox
+Chrome		'Google Chrom'
+	
+PC
+Browser		Value
+FireFox		C:/Program Files/Mozilla Firefox/firefox.exe
+

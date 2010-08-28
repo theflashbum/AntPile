@@ -8,14 +8,14 @@ package
 	/**
 	 * @author jessefreeman
 	 */
-	public class FlashTDDProject extends Sprite 
+	public class AntPileProject extends Sprite 
 	{
 
 		[Embed(source="../build/assets/hello_world.png")]
 
 		private var HelloWorldImage : Class;
 
-		public function FlashTDDProject() 
+		public function AntPileProject() 
 		{
 			
 			configureStage();

@@ -1,20 +1,20 @@
-package com.flashartofwar.flashtdd 
+package com.flashartofwar.antpile 
 {
 	import flexunit.framework.Assert;
 
 	/**
 	 * @author jessefreeman
 	 */
-	public class FlashTDDProjectTest 
+	public class AntPileProjectTest 
 	{
 
-		public function FlashTDDProjectTest()
+		public function AntPileProjectTest()
 		{
 		}
 
 		[Test]
 
-		public function testFlashTDDProject() : void
+		public function testAntPileProject() : void
 		{
 			Assert.fail("Please add tests to this project");
 		}

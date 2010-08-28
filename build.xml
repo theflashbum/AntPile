@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="FlashTDDProject" basedir="." default="full-build">
+<project name="AntPile v1.3.0 RC1" basedir="." default="full-build">
     
     <!-- identify properties file -->
     <property file="build.properties" />
