@@ -14,7 +14,6 @@
     <import file="${includes.loc}/misc.xml" />
     <import file="${includes.loc}/test.xml" />
     <import file="${includes.loc}/asdoc.xml" />
-    <import file="${includes.loc}/compile-air.xml" />
     <import file="${includes.loc}/package-air.xml" />
     <import file="${includes.loc}/compile-swf.xml" />
     <import file="${includes.loc}/compile-swc.xml" />
@@ -39,10 +38,14 @@
         <if>
             <equals arg1="air" arg2="${compile.platform}" casesensitive="false" />
             <then>
-                <runtarget target="compile-air.compile" />
+            	<echo>[compile] Compiling AIR</echo>
+            	<runtarget target="compile-swf.compile" />
+            	<runtarget target="package-air.package" />
             </then>
             <else>
-                <runtarget target="compile-swf.compile" />
+            	<echo>[compile] Compiling SWF</echo>
+            	<log message="Compile Build: Compiling SWF"/>
+            	<runtarget target="compile-swf.compile" />
             </else>
         </if>
         <log>end target compile</log>
@@ -51,13 +54,38 @@
     <target name="run" description="Runs app">
         <if>
             <equals arg1="air" arg2="${compile.platform}" casesensitive="false" />
-            <then><runtarget target="compile-air.local-run" /></then>
+            <then><!--<runtarget target="compile-air.local-run" />--></then>
             <else><runtarget target="compile-swf.local-run" /></else>
         </if>
     </target>
 
-    <target name="full-build" depends="test" description="Runs tests, compiles project, and optionally runs it.">
-        <log message="autolaunching"/>
+    <target name="full-build" description="Runs tests, compiles project, and optionally runs it.">
+    	<if>
+    		<istrue value="${run.test}"/>
+            <then>
+    			<log message="Full Build: Running Unit Tests"/>
+            	<runtarget target="test" />
+            </then>
+        </if>
+    	
+    	<if>
+			<istrue value="${run.asdoc}"/>
+	        <then>
+	        	<log message="Full Build: Generating ASDocs"/>
+	        	<runtarget target="asdoc" />
+	        </then>
+	    </if>
+    	
+    	<if>
+			<istrue value="${mobile}"/>
+	        <then>
+	        	<runtarget target="deploy-to-phone" />
+	        </then>
+    		<else>
+    			<runtarget target="compile" />
+            </else>
+	    </if>
+    	
         <if>
             <istrue value="${autolaunch.url}"/>
             <then><runtarget target="run"/></then>

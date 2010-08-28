@@ -10,6 +10,7 @@
 /dist/*
 /apks/*
 /tmp/*
+/bin-air/*
  
 /.actionScriptProperties
 /.flexProperties

@@ -13,7 +13,6 @@ package com.flashartofwar.antpile
 		}
 
 		[Test]
-
 		public function testAntPileProject() : void
 		{
 			Assert.fail("Please add tests to this project");
