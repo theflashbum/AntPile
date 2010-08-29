@@ -84,7 +84,7 @@ Mac
 Browser		Value
 Safari		Safari
 Firefox		FireFox
-Chrome		'Google Chrom'
+Chrome		'Google Chrome'
 	
 PC
 Browser		Value
